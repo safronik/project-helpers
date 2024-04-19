@@ -1,0 +1,25 @@
+{
+    "name": "safronik/helpers",
+    "type": "library",
+    "description": "Different helpers, such as: IP, Array, Data, Reflection",
+    "keywords": ["helper","ip","data","array","reflection"],
+    "homepage": "https://github.com/Safronik/project-helpers",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Roman Safronov",
+            "email": "r.safronik@yandex.ru",
+            "homepage": "https://github.com/Safronik/",
+            "role": "Developer"
+        }
+    ],
+    "require": {
+        "php": ">=8.2",
+        "safronik/globals": "^0.1.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Safronik\\Helpers\\": "src/"
+        }
+    }
+}
