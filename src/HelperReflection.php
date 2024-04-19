@@ -1,6 +1,6 @@
 <?php
 
-namespace Safronik\Core\Helpers;
+namespace Safronik\Helpers;
 
 class HelperReflection{
     
