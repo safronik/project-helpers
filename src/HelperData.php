@@ -19,6 +19,8 @@ class HelperData{
 	}
     
     /**
+     * Generates UUID
+     *
      * @param string $type
      * @param int    $length
      *

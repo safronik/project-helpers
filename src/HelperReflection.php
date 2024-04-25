@@ -7,13 +7,13 @@ class HelperReflection{
     /**
      * Returns an array of found classes in the directory corresponding conditions
      *
-     * @param string    $directory  Directory to scan
-     * @param string    $namespace  Namespace of the directory
-     * @param string[]  $exclusions Array of strings with exclusions. Strict match
-     * @param string    $filter
-     * @param bool      $recursive  Recursive search
-     * @param bool      $skip_infrastructure
-     * @param ?callable $filter_callback
+     * @param string    $directory           Directory to scan
+     * @param string    $namespace           Directory namespace
+     * @param string[]  $exclusions          Array of strings with exclusions. Full strict comparison
+     * @param string    $filter              Positive filter (only string contains will be present in the result set)
+     * @param bool      $recursive           Scan subdirectories
+     * @param bool      $skip_infrastructure Skip classes starts with '_' (underscore symbol)
+     * @param ?callable $filter_callback     Any callback you want to filter the result set
      *
      * @return array of classnames
      */
@@ -75,6 +75,14 @@ class HelperReflection{
             : $found;
     }
     
+    /**
+     * Filter everything except final classes from the given set
+     *
+     * @param $classes
+     *
+     * @return array
+     * @throws \ReflectionException
+     */
     public static function filterFinalClasses( $classes ): array
     {
         return array_filter(
@@ -83,6 +91,14 @@ class HelperReflection{
         );
     }
     
+    /**
+     * Filter everything except interfaces from the given set
+     *
+     * @param $classes
+     *
+     * @return array
+     * @throws \ReflectionException
+     */
     public static function getInterfacesFromDirectory( $classes ): array
     {
         return array_filter(
@@ -92,6 +108,8 @@ class HelperReflection{
     }
     
     /**
+     * Check if the given class use specific trait
+     *
      * @param string $classname
      * @param string $trait
      *
@@ -103,6 +121,8 @@ class HelperReflection{
     }
     
     /**
+     * Gets class traits
+     *
      * @param string $classname
      *
      * @return array
@@ -121,6 +141,8 @@ class HelperReflection{
     }
     
     /**
+     * Filter everything except classes which are implement specific interface from the given set
+     *
      * @param array  $classes
      * @param string $interface
      *
