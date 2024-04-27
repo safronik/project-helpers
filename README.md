@@ -6,11 +6,19 @@
 # About
 
 Helps to operate with such thing as:
-
-- Arrays
+- Array
+- Buffer
 - Data
+- Dir
+- DNS
+- HTTP
 - IP
+- Page
 - Reflection
+- String
+- Surrounding
+- Time
+- Version
 
 # Installation
 
@@ -37,10 +45,16 @@ $token           = HelperData::createToken(); // Generates UUID
 ## [HelperIP](src%2FHelperIP.php)
 
 ```php
-$ip_string = HelperIP::get()        // Returns the current IPv4 address
-$ip_long   = HelperIP::getDecimal() // Returns the current IPv4 address converted to long type
-$ip_long   = HelperIP::getDecimal( '127.0.0.1' ) // Returns 127.0.0.1 IPv4 address converted to long type -> 2130706433
-$is_valid  = HelperIP::validate( '127.0.0.1' )   // Validate if the given value is IPv4 address
+get([ip_types: array|string[] = [...]], [v4_only: bool = true]): array|mixed|null
+getDecimal([ip: null|string = null]): int
+isPrivateNetwork(ip: string, [ip_type: string = 'v4']): bool
+isIPInMask(ip: string, cidr: array|string, [ip_type: string = 'v4'], [xtet_count: int = 0]): bool
+convertLongMaskToNumber(long_mask: int): int
+validate(ip: string): bool|string
+cidrValidate(cidr: string): bool
+normalizeIPv6(ip: string): string
+reduceIPv6(ip: string): string
+resolveIP(ip): string
 ```
 ## [HelperReflection](src%2FHelperReflection.php)
 ```php
@@ -72,4 +86,62 @@ HelperReflection::filterClassesByInterface(classes: array, interface: string): a
 
 // // Check if the given class implements specific interface
 HelperReflection::isClassHasInterface(class: object|string, interface: string): bool
+```
+
+## [BufferHelper.php](src%2FBufferHelper.php)
+
+```php
+getCSVMap(&csv: string): array
+parseCSV(&scv_string: string): array
+parseNSV(nsv_string: string): string[]
+convertCSVToArray(&csv: string, [map: array = [...]]): array
+convertCSVLineToArray(&csv: string, [map: array = [...]], [stripslashes: bool = false]): array
+cleanUpCSV(&buffer: array): array
+popCSVLine(&csv: string): string
+```
+
+## [DirHelper.php](src%2FDirHelper.php)
+```php
+isExist(path): bool
+isEmpty(path): bool
+create(path): void
+```
+## [DNSHelper.php](src%2FDNSHelper.php)
+```php
+resolveHost(host: string): string
+```
+## [HTTPHelper.php](src%2FHTTPHelper.php)
+```php
+http__request(url: string, [data: array = [...]], [presets: array|null|string = null], [opts: array = [...]]): array|string[]|bool|int|string
+http__request__get_content(url: string): array|string[]|bool|int|mixed|string
+http__request__get_response_code(url: string): array|string[]|bool|int|mixed|string
+http__get_data_from_remote_gz(url: string): array|false|mixed|string
+get_data_from_local_gz(path: string): array|string[]|mixed|string
+http__download_remote_file(url, tmp_folder): array|string[]|bool|int|string
+http__download_remote_file__multi(urls: array, [write_to: string = '']): array|string[]
+```
+## [PageHelper.php](src%2FPageHelper.php)
+```php
+hasError(string_page): bool
+```
+## [StringHelper.php](src%2FStringHelper.php)
+```php
+removeNonUTF8(data: array|object|string): array|object|string
+toUTF8(data: array|object|string, [data_codepage: null|string = null]): array|object|string
+fromUTF8(obj: array|object|string, [data_codepage: null|string = null]): mixed
+```
+## [SurroundingHelper.php](src%2FSurroundingHelper.php)
+```php
+isWindows(): bool
+isExtensionLoaded(extension_name): bool
+```
+## [TimeHelper.php](src%2FTimeHelper.php)
+```php
+getIntervalStart(interval: int): int
+```
+## [VersionHelper.php](src%2FVersionHelper.php)
+```php
+isCorrectSemanticVersion(version: string): bool
+standardizeVersion(version): string
+compare(version1: string, version2: string): int
 ```
