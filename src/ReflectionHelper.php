@@ -2,7 +2,7 @@
 
 namespace Safronik\Helpers;
 
-class HelperReflection{
+class ReflectionHelper{
     
     /**
      * Returns an array of found classes in the directory corresponding conditions
@@ -25,7 +25,7 @@ class HelperReflection{
         bool   $recursive = false,
         bool   $skip_infrastructure = true,
         callable $filter_callback = null
-    )
+    ): array
     {
         $found = [];
         

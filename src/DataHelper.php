@@ -2,7 +2,34 @@
 
 namespace Safronik\Helpers;
 
-class HelperData{
+class DataHelper{
+    
+    /**
+     * Checks if the string is JSON type
+     *
+     * @param mixed $value
+     *
+     * @return bool
+     */
+	public static function isJson( mixed $value )
+	{
+        return is_string( $value )
+                && strlen( $value ) > 8
+                && ( $value[0] === '[' || $value[0] === '{' )
+                && json_decode( $value );
+	}
+	
+	/**
+	 * Checks if given string is valid regular expression
+	 *
+	 * @param string $regexp
+	 *
+	 * @return bool
+	 */
+	public static function isRegexp( $regexp){
+		return @preg_match('/' . $regexp . '/', null) !== false;
+	}
+
 	/**
 	 * Check if the given string is a valid JSON
 	 *
