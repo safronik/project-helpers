@@ -83,7 +83,7 @@ class ReflectionHelper{
      * @return array
      * @throws \ReflectionException
      */
-    public static function filterFinalClasses( $classes ): array
+    public static function filterFinalClasses( array $classes ): array
     {
         return array_filter(
             $classes,
@@ -170,6 +170,22 @@ class ReflectionHelper{
             $interface,
             (array) class_implements( $class ),
             true
+        );
+    }
+    
+    /**
+     * Returns a classname from full namespace
+     *
+     * @param object|string $class
+     *
+     * @return string
+     */
+    public static function getNamespaceFromClassname( object|string $class ): string
+    {
+        return preg_replace(
+            '/^(.*)?(\\\\.*)$/',
+            '$1',
+            is_string( $class ) ? $class : $class::class
         );
     }
 }
