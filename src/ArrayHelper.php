@@ -6,7 +6,9 @@ class ArrayHelper
 {
     /**
      * Modifies the array $array. Paste $insert on $key
-     * If $key is integer array should be sorted, otherwise behaviour is unpredictable
+     * If $key is integer, array should be sorted, otherwise behaviour is unpredictable
+     *
+     * Prepends insertion for string keys
      *
      * @param array      $array
      * @param int|string $key
@@ -32,10 +34,12 @@ class ArrayHelper
     }
 
     /**
-	 * Merging arrays without reseting numeric keys
+	 * Merging arrays without resetting numeric keys
+     *
+     * Array keys will override key/value pairs in case key coincidence
 	 *
-	 * @param array $arr1 One-dimentional array
-	 * @param array $arr2 One-dimentional array
+	 * @param array $arr1 One-dimensional array
+	 * @param array $arr2 One-dimensional array
 	 *
 	 * @return array Merged array
 	 */
@@ -48,10 +52,12 @@ class ArrayHelper
 	}
 	
 	/**
-	 * Merging arrays without reseting numeric keys recursive
+	 * Merging arrays without resetting numeric keys recursive
+     *
+     * Array keys will override key/value pairs in case key coincidence
 	 *
-	 * @param array $arr1 One-dimentional array
-	 * @param array $arr2 One-dimentional array
+	 * @param array $arr1 One-dimensional array
+	 * @param array $arr2 One-dimensional array
 	 *
 	 * @return array Merged array
 	 */
