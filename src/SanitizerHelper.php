@@ -8,18 +8,16 @@ class SanitizerHelper
     /**
      * Sanitize data in different ways
      *
-     * @param $data
-     * @param ...$rule_set
+     * @param array $data
+     * @param array $rules
      *
      * @return void
      */
-    public static function sanitize( &$data, ...$rule_set ): void
+    public static function sanitize( array &$data, array $rules ): void
     {
-        foreach( $rule_set as $rules ){
-            foreach( $rules as $field => $rule ){
-                self::setMissingOptionalToNull( $data, $field, $rule );
-                self::setEmptyFieldsToDefault( $data, $field, $rule );
-            }
+        foreach( $rules as $field => $rule ){
+            static::setMissingOptionalToNull( $data, $field, $rule );
+            static::setEmptyFieldsToDefault( $data, $field, $rule );
         }
     }
     

@@ -83,7 +83,7 @@ class ReflectionHelper{
      * @return array
      * @throws \ReflectionException
      */
-    public static function filterFinalClasses( array $classes ): array
+    public static function filterFinal( array $classes ): array
     {
         return array_filter(
             $classes,
@@ -99,13 +99,30 @@ class ReflectionHelper{
      * @return array
      * @throws \ReflectionException
      */
-    public static function getInterfacesFromDirectory( $classes ): array
+    public static function filterInterfaces( $classes ): array
     {
         return array_filter(
             $classes,
             static fn( $class ) => ( new \ReflectionClass( $class) )->isInterface()
         );
     }
+    
+    /**
+     * Filter everything except traits from the given set
+     *
+     * @param $classes
+     *
+     * @return array
+     * @throws \ReflectionException
+     */
+    public static function filterTraits( $classes ): array
+    {
+        return array_filter(
+            $classes,
+            static fn( $class ) => ( new \ReflectionClass( $class) )->isTrait()
+        );
+    }
+
     
     /**
      * Check if the given class use specific trait
@@ -164,7 +181,7 @@ class ReflectionHelper{
      *
      * @return bool
      */
-    public static function isClassHasInterface( object|string $class, string $interface ): bool
+    public static function isClassImplementsInterface( object|string $class, string $interface ): bool
     {
         return in_array(
             $interface,
@@ -174,7 +191,7 @@ class ReflectionHelper{
     }
     
     /**
-     * Returns a classname from full namespace
+     * Returns a first-level namespace from full namespace
      *
      * @param object|string $class
      *
@@ -187,5 +204,10 @@ class ReflectionHelper{
             '$1',
             is_string( $class ) ? $class : $class::class
         );
+    }
+    
+    public static function isTypeScalar( $type ): bool
+    {
+        return in_array( $type, [ 'integer', 'int', 'string', 'bool', 'float', 'mixed' ], true );
     }
 }

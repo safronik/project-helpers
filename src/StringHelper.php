@@ -86,5 +86,15 @@ class StringHelper{
         
 		return $obj;
 	}
- 
+
+    /**
+     * Checks if the string is regular expression
+     *
+     * @param string $string_to_check
+     * @return bool
+     */
+    public static function isRegexp( string $string_to_check ): bool
+    {
+        return preg_match( '@^[/#+\@%({\[<].+[/#+\@%)}\]>]$@', $string_to_check );
+    }
 }
