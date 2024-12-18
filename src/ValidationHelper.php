@@ -84,7 +84,7 @@ class ValidationHelper
      */
     private static function validateType( mixed $value, string $field, string|array $required_types ): bool
     {
-        $required_types = str_contains($required_types, '|' )
+        $required_types = is_string( $required_types ) && str_contains($required_types, '|' )
             ? explode( '|', $required_types )
             : $required_types;
 
@@ -93,7 +93,7 @@ class ValidationHelper
 
             $validation_result = array_reduce(
                 $required_types,
-                static fn($result, $required_type) => $result || static::validateType( $value, $field, $required_types ),
+                static fn($result, $required_type) => $result || static::validateType( $value, $field, $required_type ),
                 false
             );
 
@@ -190,10 +190,10 @@ class ValidationHelper
         }
 
         isset( $min ) && $value_length < $min
-            && throw new InvalidArgumentException( "Field $field content '$value' is lower than length " . $min );
+            && throw new InvalidArgumentException( "Field $field content '" . (is_scalar($value) ? $value : 'Non scalar') . "' is lower than length $min" );
 
         isset( $max ) && $value_length > $max
-            && throw new InvalidArgumentException( "Field $field content '$value' is exceeded available length " . $max );
+            && throw new InvalidArgumentException( "Field $field content '" . (is_scalar($value) ? $value : 'Non scalar') . "' is exceeded available length $max" );
     }
 
 }
