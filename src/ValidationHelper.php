@@ -26,12 +26,10 @@ class ValidationHelper
      */
     public static function validate( array $data, array $rules ): void
     {
-        static::validateRequired( $data, $rules );
-
         foreach( $data as $field => $value ){
             if( isset( $rules[ $field ] ) ){
                 ! empty( $rules[ $field ]['type'] )    && static::validateType(    $value, $field, $rules[ $field ]['type'] );
-                ! empty( $rules[ $field ]['length'] )  && static::validateLength(  $value, $field, $rules[ $field ]['length'] );
+                ! empty( $rules[ $field ]['length'] )  && static::validateLength(  class_exists($rules[ $field ]['type']) ? [$value] : $value, $field, $rules[ $field ]['length'] );
                 ! empty( $rules[ $field ]['content'] ) && static::validateContent( $value, $field, $rules[ $field ]['content'] );
             }
         }
@@ -64,7 +62,7 @@ class ValidationHelper
      *
      * @return void
      */
-    private static function validateRequired( mixed $data, array $rules ): void
+    public static function validateRequired( array $data, array $rules ): void
     {
         foreach( $rules as $field => $rule ){
             ( in_array( 'required', $rule, true ) || in_array( '!', $rule, true ) )
