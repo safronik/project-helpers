@@ -26,11 +26,13 @@ class ValidationHelper
      */
     public static function validate( array $data, array $rules ): void
     {
+        static::validateRequired( $data, $rules);
+
         foreach( $data as $field => $value ){
             if( isset( $rules[ $field ] ) ){
-                ! empty( $rules[ $field ]['type'] )    && static::validateType(    $value, $field, $rules[ $field ]['type'] );
+                ! empty( $rules[ $field ]['type'] )    && static::validateType( $field, $value, $rules[ $field ][ 'type' ] );
                 ! empty( $rules[ $field ]['length'] )  && static::validateLength(  class_exists($rules[ $field ]['type']) ? [$value] : $value, $field, $rules[ $field ]['length'] );
-                ! empty( $rules[ $field ]['content'] ) && static::validateContent( $value, $field, $rules[ $field ]['content'] );
+                ! empty( $rules[ $field ]['content'] ) && static::validateContent( $field, $value, $rules[ $field ][ 'content' ] );
             }
         }
     }
@@ -74,13 +76,13 @@ class ValidationHelper
     /**
      * Check given value for expected type
      *
-     * @param mixed $value
      * @param string $field Field name
+     * @param mixed $value
      * @param string|array $required_types string representation of the expected type
      *
      * @return bool
      */
-    private static function validateType( mixed $value, string $field, string|array $required_types ): bool
+    private static function validateType( string $field, mixed $value, string|array $required_types ): bool
     {
         $required_types = is_string( $required_types ) && str_contains($required_types, '|' )
             ? explode( '|', $required_types )
@@ -91,7 +93,7 @@ class ValidationHelper
 
             $validation_result = array_reduce(
                 $required_types,
-                static fn($result, $required_type) => $result || static::validateType( $value, $field, $required_type ),
+                static fn($result, $required_type) => $result || static::validateType( $field, $value, $required_type ),
                 false
             );
 
@@ -107,11 +109,15 @@ class ValidationHelper
             return true;
         }
 
-        // Crutch. Cast value to expected type and compare it
-        $casted_value = $value;
-        settype( $casted_value, $required_types );
-        if( $casted_value == $value ){
-            return true;
+        // Crutch. Cast value to the expected type and compare it
+        // Exclude array casting, because it produces the casting error if type is scalar
+        if( ! is_array( $value ) ){
+
+            $casted_value = $value;
+            settype( $casted_value, $required_types );
+            if( $casted_value === $value ){
+                return true;
+            }
         }
 
         return gettype( $value ) === $required_types;
@@ -123,22 +129,27 @@ class ValidationHelper
      *   - regexp
      *   - array of strict contents or regexps
      *
-     * @param mixed        $value
      * @param string       $field Field name
+     * @param mixed        $value
      * @param array|string $rule  Validation rule content for this specific field
+     * @param bool         $return Forces method to return a boolean value instead of throwing an exception
      *
      * @recirsive
      *
      * @return bool
      * @throws InvalidArgumentException
      */
-    private static function validateContent( mixed $value, string $field, array|string $rule ): bool
+    private static function validateContent( string $field, mixed $value, array|string $rule, bool $return = false ): bool
     {
+        $rule = is_string( $rule ) && str_contains($rule, '|' )
+            ? explode( '|', $rule )
+            : $rule;
+
         // Recursion
         if( is_array( $rule ) ){
             $validation_result = array_reduce(
                 $rule,
-                static fn( $result, $rule_item ) => $result || static::validateContent( $value, $field, $rule_item ),
+                static fn( $result, $rule_item ) => $result || static::validateContent( $field, $value, $rule_item, true ),
                 false
             );
             $validation_result
@@ -160,7 +171,9 @@ class ValidationHelper
             return true;
         }
 
-        return false;
+        return $return
+            ? false
+            : throw new InvalidArgumentException( "Field '$field' content '$value' is not match to $rule. '$value' given." );
     }
 
     /**
@@ -193,5 +206,4 @@ class ValidationHelper
         isset( $max ) && $value_length > $max
             && throw new InvalidArgumentException( "Field $field content '" . (is_scalar($value) ? $value : 'Non scalar') . "' is exceeded available length $max" );
     }
-
 }
